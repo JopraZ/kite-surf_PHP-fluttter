@@ -10,7 +10,7 @@ return [
     [ // $staticRoutes
         '/api/centre' => [[['_route' => 'app_api_centre_index', '_controller' => 'App\\Controller\\Api\\CentreController::index'], null, ['GET' => 0], null, false, false, null]],
         '/api/demande' => [[['_route' => 'app_api_demande', '_controller' => 'App\\Controller\\Api\\DemandeController::index'], null, null, null, false, false, null]],
-        '/api/region' => [[['_route' => 'app_api_region', '_controller' => 'App\\Controller\\Api\\RegionController::index'], null, null, null, false, false, null]],
+        '/api/region' => [[['_route' => 'app_api_region_index', '_controller' => 'App\\Controller\\Api\\RegionController::index'], null, ['GET' => 0], null, false, false, null]],
     ],
     [ // $regexpList
         0 => '{^(?'

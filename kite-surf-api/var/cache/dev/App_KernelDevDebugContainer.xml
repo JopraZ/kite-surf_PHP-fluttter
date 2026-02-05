@@ -17,6 +17,7 @@
       <parameter key="DoctrineBundle">Doctrine\Bundle\DoctrineBundle\DoctrineBundle</parameter>
       <parameter key="DoctrineMigrationsBundle">Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle</parameter>
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
+      <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -34,6 +35,10 @@
       <parameter key="MakerBundle" type="collection">
         <parameter key="path">C:\Users\louis\Desktop\kite-surf-PP\kite-surf-api\vendor\symfony\maker-bundle</parameter>
         <parameter key="namespace">Symfony\Bundle\MakerBundle</parameter>
+      </parameter>
+      <parameter key="DoctrineFixturesBundle" type="collection">
+        <parameter key="path">C:\Users\louis\Desktop\kite-surf-PP\kite-surf-api\vendor\doctrine\doctrine-fixtures-bundle</parameter>
+        <parameter key="namespace">Doctrine\Bundle\FixturesBundle</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -185,6 +190,18 @@
         <argument type="service" id=".service_locator.O2p6Lk7.App\Controller\Api\RegionController"/>
       </call>
     </service>
+    <service id="App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true">
+      <tag name="doctrine.fixture.orm"/>
+    </service>
+    <service id="App\DataFixtures\CentreFixtures" class="App\DataFixtures\CentreFixtures" autowire="true" autoconfigure="true">
+      <tag name="doctrine.fixture.orm"/>
+    </service>
+    <service id="App\DataFixtures\DemandeFixtures" class="App\DataFixtures\DemandeFixtures" autowire="true" autoconfigure="true">
+      <tag name="doctrine.fixture.orm"/>
+    </service>
+    <service id="App\DataFixtures\RegionFixtures" class="App\DataFixtures\RegionFixtures" autowire="true" autoconfigure="true">
+      <tag name="doctrine.fixture.orm"/>
+    </service>
     <service id="App\Repository\CentreRepository" class="App\Repository\CentreRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -220,7 +237,7 @@
     </service>
     <service id="argument_resolver.service" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
       <tag priority="-50" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">controller.argument_value_resolver</tag>
-      <argument type="service" id=".service_locator.5xn1_2z"/>
+      <argument type="service" id=".service_locator.Cn8.hzU"/>
     </service>
     <service id="argument_resolver.default" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">
       <tag priority="-100" name="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver">controller.argument_value_resolver</tag>
@@ -1253,7 +1270,7 @@
     </service>
     <service id="argument_resolver.not_tagged_controller" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
       <tag name="controller.argument_value_resolver" priority="-200"/>
-      <argument type="service" id=".service_locator.5xn1_2z"/>
+      <argument type="service" id=".service_locator.Cn8.hzU"/>
     </service>
     <service id="routing.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
       <call method="addLoader">
@@ -2353,6 +2370,43 @@
       <argument type="service" id="maker.file_manager"/>
       <argument type="service" id="maker.generator"/>
     </service>
+    <service id="doctrine.fixtures_load_command" class="Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand">
+      <tag name="console.command" command="doctrine:fixtures:load"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine.fixtures.loader"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="collection">
+        <argument key="default" type="service" id="doctrine.fixtures.purger.orm_purger_factory"/>
+      </argument>
+      <call method="setName">
+        <argument>doctrine:fixtures:load</argument>
+      </call>
+    </service>
+    <service id="doctrine.fixtures.loader" class="Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader">
+      <call method="addFixtures">
+        <argument type="collection">
+          <argument type="collection">
+            <argument key="fixture" type="service" id="App\DataFixtures\AppFixtures"/>
+            <argument key="groups" type="collection"/>
+          </argument>
+          <argument type="collection">
+            <argument key="fixture" type="service" id="App\DataFixtures\CentreFixtures"/>
+            <argument key="groups" type="collection"/>
+          </argument>
+          <argument type="collection">
+            <argument key="fixture" type="service" id="App\DataFixtures\DemandeFixtures"/>
+            <argument key="groups" type="collection"/>
+          </argument>
+          <argument type="collection">
+            <argument key="fixture" type="service" id="App\DataFixtures\RegionFixtures"/>
+            <argument key="groups" type="collection"/>
+          </argument>
+        </argument>
+      </call>
+    </service>
+    <service id="doctrine.fixtures.purger.orm_purger_factory" class="Doctrine\Bundle\FixturesBundle\Purger\ORMPurgerFactory">
+      <tag name="doctrine.fixtures.purger_factory" alias="default"/>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\CentreController" class="App\Controller\Api\CentreController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\CentreController" class="App\Controller\Api\CentreController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Api\CentreController" class="App\Controller\Api\CentreController" autowire="true" autoconfigure="true" abstract="true"/>
@@ -2362,6 +2416,14 @@
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\Api\RegionController" class="App\Controller\Api\RegionController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\Api\RegionController" class="App\Controller\Api\RegionController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\Api\RegionController" class="App\Controller\Api\RegionController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\CentreFixtures" class="App\DataFixtures\CentreFixtures" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\DataFixtures\CentreFixtures" class="App\DataFixtures\CentreFixtures" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\DemandeFixtures" class="App\DataFixtures\DemandeFixtures" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\DataFixtures\DemandeFixtures" class="App\DataFixtures\DemandeFixtures" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\RegionFixtures" class="App\DataFixtures\RegionFixtures" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\DataFixtures\RegionFixtures" class="App\DataFixtures\RegionFixtures" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\CentreRepository" class="App\Repository\CentreRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\CentreRepository" class="App\Repository\CentreRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\DemandeRepository" class="App\Repository\DemandeRepository" autowire="true" abstract="true"/>
@@ -2797,15 +2859,23 @@
         <argument key="centreRepository" type="service_closure" id="App\Repository\CentreRepository"/>
       </argument>
     </service>
-    <service id=".service_locator.5xn1_2z" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.XkjCDkw" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="regionRepository" type="service_closure" id="App\Repository\RegionRepository"/>
+      </argument>
+    </service>
+    <service id=".service_locator.Cn8.hzU" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="App\Controller\Api\CentreController::index" type="service_closure" id=".service_locator.i2x5XvL"/>
+        <argument key="App\Controller\Api\RegionController::index" type="service_closure" id=".service_locator.XkjCDkw"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Controller\Api\CentreController:index" type="service_closure" id=".service_locator.i2x5XvL"/>
+        <argument key="App\Controller\Api\RegionController:index" type="service_closure" id=".service_locator.XkjCDkw"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
       </argument>
@@ -3527,7 +3597,7 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator.3LaPFEc"/>
+      <argument type="service" id=".service_locator.NtZDNmZ"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -3584,6 +3654,7 @@
         <argument key="doctrine:migrations:status">doctrine_migrations.status_command</argument>
         <argument key="doctrine:migrations:up-to-date">doctrine_migrations.up_to_date_command</argument>
         <argument key="doctrine:migrations:version">doctrine_migrations.version_command</argument>
+        <argument key="doctrine:fixtures:load">doctrine.fixtures_load_command</argument>
         <argument key="make:auth">maker.auto_command.make_auth</argument>
         <argument key="make:command">maker.auto_command.make_command</argument>
         <argument key="make:twig-component">maker.auto_command.make_twig_component</argument>
@@ -3616,7 +3687,7 @@
         <argument key="make:webhook">maker.auto_command.make_webhook</argument>
       </argument>
     </service>
-    <service id=".service_locator.3LaPFEc" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.NtZDNmZ" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
@@ -3674,6 +3745,7 @@
         <argument key="doctrine_migrations.status_command" type="service_closure" id=".doctrine_migrations.status_command.lazy"/>
         <argument key="doctrine_migrations.up_to_date_command" type="service_closure" id=".doctrine_migrations.up_to_date_command.lazy"/>
         <argument key="doctrine_migrations.version_command" type="service_closure" id=".doctrine_migrations.version_command.lazy"/>
+        <argument key="doctrine.fixtures_load_command" type="service_closure" id="doctrine.fixtures_load_command"/>
         <argument key="maker.auto_command.make_auth" type="service_closure" id=".maker.auto_command.make_auth.lazy"/>
         <argument key="maker.auto_command.make_command" type="service_closure" id=".maker.auto_command.make_command.lazy"/>
         <argument key="maker.auto_command.make_twig_component" type="service_closure" id=".maker.auto_command.make_twig_component.lazy"/>
@@ -3770,12 +3842,13 @@
     <service id="Doctrine\ORM\EntityManagerInterface $defaultEntityManager" alias="doctrine.orm.default_entity_manager"/>
     <service id="doctrine.orm.default_entity_manager.event_manager" alias="doctrine.dbal.default_connection.event_manager"/>
     <service id="doctrine.migrations.metadata_storage" alias="doctrine.migrations.storage.table_storage"/>
+    <service id="doctrine.fixtures.provider" alias="doctrine.fixtures.loader"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.w7.f4fT" public="true"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.5xn1_2z"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.Cn8.hzU"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="Psr\Log\LoggerInterface" alias="logger"/>
     <service id=".service_locator.bJ.4HC5" alias=".service_locator.w7.f4fT"/>
-    <service id=".service_locator.GTEl5Xt" alias=".service_locator.5xn1_2z"/>
+    <service id=".service_locator.Q6Vkm6x" alias=".service_locator.Cn8.hzU"/>
     <service id=".service_locator.LMuqDDe" alias=".service_locator.VHsrTPK"/>
     <service id=".service_locator.jUv.zyj" alias=".service_locator.O2p6Lk7"/>
     <service id="event_dispatcher" alias="debug.event_dispatcher" public="true"/>
@@ -3785,6 +3858,7 @@
     <service id="doctrine.orm.default_metadata_driver" alias=".doctrine.orm.default_metadata_driver"/>
     <service id=".service_locator.gFlme_s" alias=".service_locator.y4_Zrx."/>
     <service id=".service_locator.k7g4Gti" alias=".service_locator.i2x5XvL"/>
+    <service id=".service_locator.gcrCnb." alias=".service_locator.XkjCDkw"/>
     <service id=".service_locator.KL3pAWR" alias=".service_locator.O2p6Lk7"/>
     <service id=".service_locator.3bxtozr" alias=".service_locator._ju.bgC"/>
     <service id=".service_locator._kIAbz1" alias=".service_locator.TpoC7U9"/>

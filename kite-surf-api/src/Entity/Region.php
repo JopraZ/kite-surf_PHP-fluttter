@@ -48,7 +48,7 @@ class Region
     }
 
     /**
-     * @return Collection<int, Centre>
+     * @return Collection <int, Centre>
      */
     public function getCentres(): Collection
     {
