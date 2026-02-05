@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RegionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RegionRepository::class)]
@@ -16,11 +18,17 @@ class Region
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $y = null;
+    /**
+     * @var Collection<int, Centre>
+     */
+    #[ORM\OneToMany(targetEntity: Centre::class, mappedBy: 'centre')]
+    private Collection $centres;
 
-    #[ORM\Column(length: 150)]
-    private ?string $slug = null;
+    public function __construct()
+    {
+        $this->centres = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -39,27 +47,34 @@ class Region
         return $this;
     }
 
-    public function getY(): ?string
+    /**
+     * @return Collection<int, Centre>
+     */
+    public function getCentres(): Collection
     {
-        return $this->y;
+        return $this->centres;
     }
 
-    public function setY(string $y): static
+    public function addCentre(Centre $centre): static
     {
-        $this->y = $y;
+        if (!$this->centres->contains($centre)) {
+            $this->centres->add($centre);
+            $centre->setCentre($this);
+        }
 
         return $this;
     }
 
-    public function getSlug(): ?string
+    public function removeCentre(Centre $centre): static
     {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): static
-    {
-        $this->slug = $slug;
+        if ($this->centres->removeElement($centre)) {
+            // set the owning side to null (unless already changed)
+            if ($centre->getCentre() === $this) {
+                $centre->setCentre(null);
+            }
+        }
 
         return $this;
     }
+
 }
