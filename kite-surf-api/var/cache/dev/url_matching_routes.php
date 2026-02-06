@@ -9,7 +9,10 @@ return [
     false, // $matchHost
     [ // $staticRoutes
         '/api/centre' => [[['_route' => 'app_api_centre_index', '_controller' => 'App\\Controller\\Api\\CentreController::index'], null, ['GET' => 0], null, false, false, null]],
-        '/api/demande' => [[['_route' => 'app_api_demande', '_controller' => 'App\\Controller\\Api\\DemandeController::index'], null, null, null, false, false, null]],
+        '/api/demande' => [
+            [['_route' => 'app_api_demande_index', '_controller' => 'App\\Controller\\Api\\DemandeController::index'], null, ['GET' => 0], null, false, false, null],
+            [['_route' => 'app_api_demande_create', '_controller' => 'App\\Controller\\Api\\DemandeController::create'], null, ['POST' => 0], null, false, false, null],
+        ],
         '/api/region' => [[['_route' => 'app_api_region_index', '_controller' => 'App\\Controller\\Api\\RegionController::index'], null, ['GET' => 0], null, false, false, null]],
     ],
     [ // $regexpList

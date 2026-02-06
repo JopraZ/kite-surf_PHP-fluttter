@@ -2,14 +2,17 @@
 
 namespace App\Entity;
 
+
 use App\Repository\RegionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: RegionRepository::class)]
 class Region
 {
+    // ================== PROPRIÉTÉS ==================
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -18,27 +21,22 @@ class Region
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    /**
-     * @var Collection<int, Centre>
-     */
-    #[ORM\OneToMany(targetEntity: Centre::class, mappedBy: 'centre')]
-    private Collection $centres;
+    // ================== Getters ==================
 
-    public function __construct()
-    {
-        $this->centres = new ArrayCollection();
-    }
-
-
+    #[Groups(['region:list'])]
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    #[Groups(['region:list'])]
     public function getNom(): ?string
     {
         return $this->nom;
     }
+
+    // ================== SETTERS ==================
+
 
     public function setNom(string $nom): static
     {

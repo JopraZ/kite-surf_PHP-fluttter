@@ -13,9 +13,17 @@ class RegionController extends AbstractController
     public function index(RegionRepository $regionRepository): JsonResponse
     {;
         $regions = $regionRepository->findAll();
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'regions' => $regions
+
+        $data= [];
+        foreach ($regions as $region) {
+            $data[] = [
+                'id' => $region->getId(),
+                'nom' => $region->getNom(),
+            ];
+        }
+        return new JsonResponse([
+            'count' => count($data),
+            'regions' => $data
         ]);
     }
 }

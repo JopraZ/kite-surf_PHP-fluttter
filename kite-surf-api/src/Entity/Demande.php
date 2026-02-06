@@ -5,10 +5,13 @@ namespace App\Entity;
 use App\Repository\DemandeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DemandeRepository::class)]
 class Demande
 {
+    // ================== PROPRIÉTÉS ==================
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,14 +33,51 @@ class Demande
     #[ORM\JoinColumn(nullable: false)]
     private ?Centre $centre = null;
 
+    // ================== GETTERS ==================
+
+    #[Groups(['demande:list'])]
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    #[Groups(['demande:list'])]
     public function getMail(): ?string
     {
         return $this->mail;
+    }
+
+    #[Groups(['demande:list'])]
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    #[Groups(['demande:list'])]
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    #[Groups(['demande:list'])]
+    public function getDate(): ?\DateTimeImmutable
+    {
+        return $this->date;
+    }
+
+    #[Groups(['demande:list'])]
+    public function getCentre(): ?Centre
+    {
+        return $this->centre;
+    }
+
+    // ================== SETTERS ==================
+
+    public function setCentre(Centre $centre): static
+    {
+        $this->centre = $centre;
+
+        return $this;
     }
 
     public function setMail(string $mail): static
@@ -46,22 +86,12 @@ class Demande
 
         return $this;
     }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
+    
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
 
         return $this;
-    }
-
-    public function getMessage(): ?string
-    {
-        return $this->message;
     }
 
     public function setMessage(string $message): static
@@ -71,26 +101,9 @@ class Demande
         return $this;
     }
 
-    public function getDate(): ?\DateTimeImmutable
-    {
-        return $this->date;
-    }
-
     public function setDate(\DateTimeImmutable $date): static
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function getCentre(): ?Centre
-    {
-        return $this->centre;
-    }
-
-    public function setCentre(Centre $centre): static
-    {
-        $this->centre = $centre;
 
         return $this;
     }
