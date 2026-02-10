@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kite_surf_app/app/router.dart';
 import '../core/theme/app_theme.dart';
-import '../pages/home/home_page.dart';
 
 class KiteSurfApp extends StatelessWidget {
   const KiteSurfApp({super.key});
@@ -10,7 +10,8 @@ class KiteSurfApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      home: const HomePage(),
+      onGenerateRoute: AppRouter.onGenerateRoute,
+      initialRoute: '/',
     );
   }
 }
